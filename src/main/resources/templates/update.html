@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品更新</title>
+</head>
+<body>
+<h1>商品情報更新</h1>
+<form action="/update" method="post" th:object="${updateForm}">
+    <p>[[ #{form.lbl.productId} ]] [[${product.id}]]</p>
+        <input type="hidden" th:field="${product.id}">
+    <p>
+        [[ #{form.lbl.productName} ]]
+        <input type="text" th:field="${product.name}">
+    </p>
+    <p>
+        [[ #{form.lbl.price} ]]
+        <input type="text" th:field="${product.price}">
+    </p>
+    <p><button type="submit" th:text="更新"></button></p>
+</form>
+</body>
+</html>

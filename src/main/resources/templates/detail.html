@@ -6,8 +6,16 @@
 </head>
 <body>
 <h1>商品詳細</h1>
-<p>id：[[${product.id}]]</p>
-<p>商品名：[[${product.name}]]</p>
-<p>値段：[[${product.price}]]</p>
+<form action="/delete" method="post" th:object="${deleteForm}">
+    <p>
+        [[ #{form.lbl.productId} ]] [[${product.id}]]
+        <input type="hidden" th:field="${product.id}">
+    </p>
+    <p>[[ #{form.lbl.productName} ]] [[${product.name}]]</p>
+    <input type="hidden" th:field="${product.name}">
+    <p>[[ #{form.lbl.price} ]] [[${product.price}]]</p>
+    <input type="hidden" th:field="${product.price}">
+    <p><button type="submit" th:text="削除"></button></p>
+</form>
 </body>
 </html>
