@@ -44,16 +44,16 @@ public class ProductController {
         return "/detail";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/product-add")
     public String add(@ModelAttribute("addForm") ProductForm productAddForm) {
-        return "/add";
+        return "/product-add";
     }
 
     @PostMapping("/add")
     public String add(@Validated @ModelAttribute("addForm") ProductForm productAddForm,
                       BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "/add";
+            return "/product-add";
         } else {
             //追加処理
             productService.insert(new ProductRecord(null, productAddForm.getName(), productAddForm.getPrice()));
@@ -94,20 +94,17 @@ public class ProductController {
     }
 
     @PostMapping("/delete")
-    public String delete(@Validated @ModelAttribute("deleteForm") ProductForm productdeleteForm,
-                         BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "/detail";
-        } else {
+    public String delete(@ModelAttribute("deleteForm") ProductForm productdeleteForm,
+                          Model model) {
 
-            //追加処理
-            productService.delete(productdeleteForm.getId());
+        //追加処理
+        productService.delete(productdeleteForm.getId());
 
-            //product-listに渡す値取得
-            List<ProductRecord> list = productService.findAll();
-            model.addAttribute("products", list);
+        //product-listに渡す値取得
+        List<ProductRecord> list = productService.findAll();
+        model.addAttribute("products", list);
 
-            return "/product-list";
-        }
+        return "/product-list";
+
     }
 }

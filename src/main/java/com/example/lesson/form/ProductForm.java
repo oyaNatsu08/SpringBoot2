@@ -1,9 +1,6 @@
 package com.example.lesson.form;
 
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -15,7 +12,8 @@ public class ProductForm {
     private String name;
 
     @NotNull
-    @Digits(integer = Integer.MAX_VALUE, fraction = 0)
+    @Digits(message = "正しい数値を入力してください", integer = Integer.MAX_VALUE, fraction = 0)
+    //@Pattern(regexp = "[0-9]+")
     @PositiveOrZero
     private Integer price;
 
