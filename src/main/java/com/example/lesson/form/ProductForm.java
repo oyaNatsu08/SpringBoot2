@@ -12,8 +12,8 @@ public class ProductForm {
     private String name;
 
     @NotNull
-    @Digits(message = "正しい数値を入力してください", integer = Integer.MAX_VALUE, fraction = 0)
-    //@Pattern(regexp = "[0-9]+")
+    //@Digits(integer = Integer.MAX_VALUE, fraction = 0)
+    @Pattern(regexp = "^\\d$")
     @PositiveOrZero
     private Integer price;
 

@@ -15,16 +15,18 @@
   <p>
     [[ #{form.lbl.productName} ]]
     <input type="text" th:field="*{name}">
-    <span class="error" th:each="error: ${#fields.errors('name')}">
-      [[ ${error} ]]
-    </span>
+<!--    <span class="error" th:each="error: ${#fields.errors('name')}">-->
+<!--      [[ ${error} ]]-->
+<!--    </span>-->
+      <span class="error" th:errors="*{name}"></span>
   </p>
   <p>
       [[ #{form.lbl.price} ]]
     <input type="text" th:field="*{price}">
-    <span class="error" th:each="error: ${#fields.errors('price')}">
-      [[ ${error} ]]
-    </span>
+<!--    <span class="error" th:each="error: ${#fields.errors('price')}">-->
+<!--      [[ ${error} ]]-->
+<!--    </span>-->
+      <span class="error" th:errors="*{price}"></span>
   </p>
   <p><button type="submit" th:text="追加"></button></p>
 </form>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>商品一覧</title>
+</head>
+
+<body>
+  <h1>商品システム</h1>
+  <form>
+    <button type="button" id="list-view-button">商品一覧</button>
+    <button type="button" id="add-view-button">商品追加</button>
+    <button type="button" id="update-view-button">商品更新</button>
+    <button type="button" id="delete-view-button">商品削除</button>
+  </form>
+
+  <!-- 商品一覧画面 -->
+  <div id="list-view" style="display: none;">
+    <h1>商品一覧</h1>
+    <table id="table-view">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>商品名</th>
+          <th>値段</th>
+        </tr>
+      </thead>
+
+      <tbody id="product-table">
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 商品詳細画面 -->
+  <div id="detail-view" style="display: none;">
+    <h1>商品詳細</h1>
+    <p>
+      商品ID：
+      <span id="product-id"></span>
+    </p>
+    <p>
+      商品名：
+      <span id="product-name"></span>
+    </p>
+    <p>
+      値段：
+      <span id="product-price"></span>
+    </p>
+    <!-- <p><button type="button" id="add">追加</button></p> -->
+    </form>
+    <span id="success"></span>
+  </div>
+
+  <!-- 商品追加画面 -->
+  <div id="add-view" style="display: none;">
+    <h1>商品追加</h1>
+    <form>
+
+      <p>
+        商品名：
+        <input type="text" name="name" id="name">
+      </p>
+      <p>
+        値段：
+        <input type="text" name="price" id="price">
+      </p>
+      <p><button type="button" id="add">追加</button></p>
+    </form>
+    <span id="success"></span>
+  </div>
+
+  <!-- 商品更新画面
+  <div id="update-view" style="display: none;">
+    <h1>商品更新</h1>
+    <form>
+
+      <p>
+        商品名：
+        <input type="text" name="name">
+      </p>
+      <p>
+        値段：
+        <input type="text" name="price">
+      </p>
+      <p><button type="button" id="update">更新</button></p>
+    </form>
+  </div> -->
+
+
+  <!-- <div id="results"></div>
+  <span id="id"></span>
+  <span id="name"></span>
+  <span id="price"></span> -->
+
+
+  <script>
+    'use strict'
+
+    document.getElementById('list-view-button').addEventListener('click', () => {
+
+      document.getElementById('add-view').style.display = 'none';
+      document.getElementById('detail-view').style.display = 'none';
+      document.getElementById('list-view').style.display = 'block';
+
+      fetch('/product2-list')
+        .then(res => {
+          res.json()
+            .then(data => {
+              const table = document.getElementById('product-table');
+              table.innerHTML = '';
+
+              data.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><a href="/product2"><span class="detail">${product.id}</span></a></td><td>${product.name}</td><td>${product.price}</td>`;
+                table.appendChild(row);
+                // document.getElementById('id').textContent = product.id;
+                // document.getElementById('name').textContent = product.name;
+                // document.getElementById('price').textContent = product.price;
+
+              })
+
+
+            //detailで問題発生中
+            //ループ文を回すことでおかしくなっている。対策中・・
+
+            //   //detailクラス全体に設定
+            //   const details = document.querySelectorAll('.detail');
+
+            //   details.forEach(detail => {
+            //     console.log(detail);
+            //     console.log("SUCCESS!");
+
+            //     //詳細画面へ遷移
+            //     detail.addEventListener('click', () => {
+            //       console.log("SUCCESS!");
+            //       document.getElementById('list-view').style.display = 'none';
+            //       document.getElementById('add-view').style.display = 'none';
+            //       document.getElementById('detail-view').style.display = 'block';
+                  
+            //       const id = document.getElementById('detail').value;
+                  
+            //       fetch(`product-detail?detail=${id}`)
+            //         .then((res) => {
+            //           res.json()
+            //             .then(data => {
+            //               // JSONにアクセスして、データを直接取得してくる
+            //               document.getElementById('product-id').textContent = data.id;
+            //               document.getElementById('product-name').textContent = data.name;
+            //               document.getElementById('product-price').textContent = data.price;
+            //             })
+            //         })
+            //     });
+
+            //   });
+
+
+            });
+
+        });
+
+    });
+
+
+
+
+    //追加画面切り替え
+    document.getElementById('add-view-button').addEventListener('click', () => {
+
+      document.getElementById('list-view').style.display = 'none';
+      document.getElementById('detail-view').style.display = 'none';
+      document.getElementById('add-view').style.display = 'block';
+
+    });
+
+    //追加ボタンクリック
+    document.getElementById('add').addEventListener('click', () => {
+
+      const name = document.getElementById('name').value;
+      const price = document.getElementById('price').value;
+
+      console.log(name);
+      console.log(price);
+
+      fetch(`product-add?name=${name}&price=${price}`)
+        .then((response) => {
+          document.getElementById('success').textContent = '商品を追加しました';
+        });
+
+    });
+
+    // document.getElementById('update-view-button').addEventListener('click', () => {
+
+    //   document.getElementById('add-view').style.display = 'none';
+    //   document.getElementById('update-view').style.display = 'block';
+
+    // });
+
+
+  </script>
+
+</body>
+
+</html>

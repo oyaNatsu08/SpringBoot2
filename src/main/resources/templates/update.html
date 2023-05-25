@@ -12,10 +12,17 @@
     <p>
         [[ #{form.lbl.productName} ]]
         <input type="text" th:field="${product.name}">
+        <span class="error" th:each="error: ${#fields.errors('name')}">
+          [[ ${error} ]]
+        </span>
     </p>
+
     <p>
         [[ #{form.lbl.price} ]]
         <input type="number" th:field="${product.price}">
+        <span class="error" th:each="error: ${#fields.errors('name')}">
+          [[ ${error} ]]
+        </span>
     </p>
     <p><button type="submit" th:text="更新"></button></p>
 </form>

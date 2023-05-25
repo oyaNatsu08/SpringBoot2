@@ -44,10 +44,10 @@ public class ProductController {
         return "/detail";
     }
 
-    @GetMapping("/product-add")
-    public String add(@ModelAttribute("addForm") ProductForm productAddForm) {
-        return "/product-add";
-    }
+//    @GetMapping("/product-add")
+//    public String add(@ModelAttribute("addForm") ProductForm productAddForm) {
+//        return "/product-add";
+//    }
 
     @PostMapping("/add")
     public String add(@Validated @ModelAttribute("addForm") ProductForm productAddForm,
@@ -107,4 +107,10 @@ public class ProductController {
         return "/product-list";
 
     }
+
+    @GetMapping("/product2")
+    public String product2() {
+        return "/product2";
+    }
+
 }
