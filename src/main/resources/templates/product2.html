@@ -11,23 +11,21 @@
   <form>
     <button type="button" id="list-view-button">商品一覧</button>
     <button type="button" id="add-view-button">商品追加</button>
-    <button type="button" id="update-view-button">商品更新</button>
-    <button type="button" id="delete-view-button">商品削除</button>
   </form>
 
   <!-- 商品一覧画面 -->
   <div id="list-view" style="display: none;">
     <h1>商品一覧</h1>
-    <table id="table-view">
+    <table id="table-view" border="1">
       <thead>
         <tr>
-          <th>ID</th>
+          <th>選択</th>
           <th>商品名</th>
           <th>値段</th>
         </tr>
       </thead>
 
-      <tbody id="product-table">
+      <tbody id="product-table" class="detail">
 
       </tbody>
     </table>
@@ -42,15 +40,19 @@
     </p>
     <p>
       商品名：
-      <span id="product-name"></span>
+      <input id="product-name">
     </p>
     <p>
       値段：
-      <span id="product-price"></span>
+      <input id="product-price">
     </p>
-    <!-- <p><button type="button" id="add">追加</button></p> -->
+    <p><span id="success2"></span></p>
+    <p><span id="success3"></span></p>
+
+    <button type="button" id="update">更新</button>
+    <button type="button" id="delete">削除</button>
     </form>
-    <span id="success"></span>
+
   </div>
 
   <!-- 商品追加画面 -->
@@ -71,30 +73,6 @@
     <span id="success"></span>
   </div>
 
-  <!-- 商品更新画面
-  <div id="update-view" style="display: none;">
-    <h1>商品更新</h1>
-    <form>
-
-      <p>
-        商品名：
-        <input type="text" name="name">
-      </p>
-      <p>
-        値段：
-        <input type="text" name="price">
-      </p>
-      <p><button type="button" id="update">更新</button></p>
-    </form>
-  </div> -->
-
-
-  <!-- <div id="results"></div>
-  <span id="id"></span>
-  <span id="name"></span>
-  <span id="price"></span> -->
-
-
   <script>
     'use strict'
 
@@ -113,7 +91,8 @@
 
               data.forEach(product => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td><a href="/product2"><span class="detail">${product.id}</span></a></td><td>${product.name}</td><td>${product.price}</td>`;
+                //row.innerHTML = `<td><a href="#"><span class="detail">${product.id}</span></a></td><td>${product.name}</td><td>${product.price}</td>`;
+                row.innerHTML = `<td><input type="radio" name="select" class="radio"><input type="hidden" id="id" value="${product.id}"></td><td>${product.name}</td><td>${product.price}</td>`;
                 table.appendChild(row);
                 // document.getElementById('id').textContent = product.id;
                 // document.getElementById('name').textContent = product.name;
@@ -121,40 +100,33 @@
 
               })
 
+              const details = document.querySelectorAll('.radio');
 
-            //detailで問題発生中
-            //ループ文を回すことでおかしくなっている。対策中・・
+              details.forEach(detail => {
 
-            //   //detailクラス全体に設定
-            //   const details = document.querySelectorAll('.detail');
+                detail.addEventListener('click', () => {
+                  document.getElementById('list-view').style.display = 'none';
+                  document.getElementById('add-view').style.display = 'none';
+                  document.getElementById('detail-view').style.display = 'block';
+                  document.getElementById('success2').textContent = '';
 
-            //   details.forEach(detail => {
-            //     console.log(detail);
-            //     console.log("SUCCESS!");
+                  //const id = document.getElementById('id').value;
+                  const id = detail.parentNode.querySelector('#id').value;
+                  console.log(id);
 
-            //     //詳細画面へ遷移
-            //     detail.addEventListener('click', () => {
-            //       console.log("SUCCESS!");
-            //       document.getElementById('list-view').style.display = 'none';
-            //       document.getElementById('add-view').style.display = 'none';
-            //       document.getElementById('detail-view').style.display = 'block';
-                  
-            //       const id = document.getElementById('detail').value;
-                  
-            //       fetch(`product-detail?detail=${id}`)
-            //         .then((res) => {
-            //           res.json()
-            //             .then(data => {
-            //               // JSONにアクセスして、データを直接取得してくる
-            //               document.getElementById('product-id').textContent = data.id;
-            //               document.getElementById('product-name').textContent = data.name;
-            //               document.getElementById('product-price').textContent = data.price;
-            //             })
-            //         })
-            //     });
+                  fetch(`/product2-detail-view?id=${id}`)
+                    .then(res => {
+                      res.json()
+                        .then(data => {
+                          // JSONにアクセスして、データを直接取得してくる
+                          document.getElementById('product-id').textContent = data.id;
+                          document.getElementById('product-name').value = data.name;
+                          document.getElementById('product-price').value = data.price;
+                        });
+                    });
+                });
 
-            //   });
-
+              });
 
             });
 
@@ -171,6 +143,9 @@
       document.getElementById('list-view').style.display = 'none';
       document.getElementById('detail-view').style.display = 'none';
       document.getElementById('add-view').style.display = 'block';
+      document.getElementById('success').textContent = '';
+      document.getElementById('name').value = '';
+      document.getElementById('price').value = '';
 
     });
 
@@ -183,20 +158,62 @@
       console.log(name);
       console.log(price);
 
-      fetch(`product-add?name=${name}&price=${price}`)
+      fetch(`product2-add?name=${name}&price=${price}`)
         .then((response) => {
           document.getElementById('success').textContent = '商品を追加しました';
         });
 
     });
 
-    // document.getElementById('update-view-button').addEventListener('click', () => {
+    //更新ボタンクリック
+    document.getElementById('update').addEventListener('click', () => {
 
-    //   document.getElementById('add-view').style.display = 'none';
-    //   document.getElementById('update-view').style.display = 'block';
+      const id = document.getElementById('product-id').textContent;
+      const name = document.getElementById('product-name').value;
+      const price = document.getElementById('product-price').value;
+
+      console.log(id, name, price);
+
+      const formData = new URLSearchParams();
+      formData.append('id', id);
+      formData.append('name', name);
+      formData.append('price', price);
+
+      fetch('product2-update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData
+      })
+        .then((response) => {
+          console.log(response)
+          document.getElementById('success2').textContent = '商品を更新しました';
+        }).catch(error => console.log(error));
+
+    });
+
+    //削除ボタンクリック
+    // document.getElementById('delete').addEventListener('click', () => {
+
+    //   const id = document.getElementById('product-id').textContent;
+
+    //   const formData = new URLSearchParams();
+    //   formData.append('id', id);
+
+    //   fetch('product2-delete', {
+    //     method: 'PUT',
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded'
+    //     },
+    //     body: formData
+    //   })
+    //     .then((response) => {
+    //       console.log(response)
+    //       document.getElementById('success3').textContent = '商品を削除しました';
+    //     }).catch(error => console.log(error));
 
     // });
-
 
   </script>
 
