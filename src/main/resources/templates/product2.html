@@ -4,6 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <title>商品一覧</title>
+
+  <style>
+    
+  </style>
 </head>
 
 <body>
@@ -16,7 +20,7 @@
   <!-- 商品一覧画面 -->
   <div id="list-view" style="display: none;">
     <h1>商品一覧</h1>
-    <table id="table-view" border="1">
+    <table id="table-view" border="1" >
       <thead>
         <tr>
           <th>選択</th>
@@ -77,12 +81,7 @@
   <script>
     'use strict'
 
-    document.getElementById('list-view-button').addEventListener('click', () => {
-
-      document.getElementById('add-view').style.display = 'none';
-      document.getElementById('detail-view').style.display = 'none';
-      document.getElementById('list-view').style.display = 'block';
-
+    function listGet() {
       fetch('/api/products')
         .then(res => {
           res.json()
@@ -111,6 +110,7 @@
                   document.getElementById('add-view').style.display = 'none';
                   document.getElementById('detail-view').style.display = 'block';
                   document.getElementById('success2').textContent = '';
+                  document.getElementById('success3').textContent = '';
 
                   //const id = document.getElementById('id').value;
                   const id = detail.parentNode.querySelector('#id').value;
@@ -133,6 +133,15 @@
             });
 
         });
+    }
+
+    document.getElementById('list-view-button').addEventListener('click', () => {
+
+      document.getElementById('add-view').style.display = 'none';
+      document.getElementById('detail-view').style.display = 'none';
+      document.getElementById('list-view').style.display = 'block';
+
+      listGet();
 
     });
 
@@ -173,6 +182,7 @@
       })
         .then((response) => {
           document.getElementById('success').textContent = '商品を追加しました';
+          listGet();
         });
 
       });
@@ -201,31 +211,35 @@
         .then((response) => {
           console.log(response)
           document.getElementById('success2').textContent = '商品を更新しました';
+          listGet();
         }).catch(error => console.log(error));
 
     });
 
     //削除ボタンクリック
-    // document.getElementById('delete').addEventListener('click', () => {
+    document.getElementById('delete').addEventListener('click', () => {
 
-    //   const id = document.getElementById('product-id').textContent;
+      const id = document.getElementById('product-id').value;
 
-    //   const formData = new URLSearchParams();
-    //   formData.append('id', id);
+      console.log('ID:' , id);
+      
+      const formData = new URLSearchParams();
+      formData.append('id', id);
 
-    //   fetch('product2-delete', {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/x-www-form-urlencoded'
-    //     },
-    //     body: formData
-    //   })
-    //     .then((response) => {
-    //       console.log(response)
-    //       document.getElementById('success3').textContent = '商品を削除しました';
-    //     }).catch(error => console.log(error));
+      fetch(`/api/product/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData
+      })
+        .then((response) => {
+          console.log(response)
+          document.getElementById('success3').textContent = '商品を削除しました';
+          listGet();
+        }).catch(error => console.log(error));
 
-    // });
+    });
 
   </script>
 

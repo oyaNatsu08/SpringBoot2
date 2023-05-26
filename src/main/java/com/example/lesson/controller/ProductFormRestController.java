@@ -39,4 +39,9 @@ public class ProductFormRestController {
         productService.update(new ProductRecord(id, name, price));
     }
 
+    @DeleteMapping("/api/product/{id}")
+    public void delete2(@RequestParam(name = "id")Integer id) {
+        productService.delete(id);
+    }
+
 }
