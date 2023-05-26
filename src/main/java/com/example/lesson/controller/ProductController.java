@@ -108,7 +108,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/product2")
+    @GetMapping("/product-management")
     public String product2() {
         return "/product2";
     }

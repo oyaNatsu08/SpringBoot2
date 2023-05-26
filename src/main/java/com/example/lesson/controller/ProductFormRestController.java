@@ -14,25 +14,25 @@ public class ProductFormRestController {
     @Autowired
     ProductService productService;
 
-    @GetMapping("/product2-list")
+    @GetMapping("/api/products")
     public List<ProductRecord> list() {
         return productService.findAll();
     }
 
-    @GetMapping("/product2-add")
+    @PostMapping("/api/product")
     public void add2(@RequestParam(name = "name")String name,
                              @RequestParam(name = "price")Integer price) {
         productService.insert(new ProductRecord(null, name, price));
     }
 
-    @GetMapping("/product2-detail-view")
+    @GetMapping("/product/detail")
     public ProductRecord detailView(@RequestParam(name = "id")Integer id) {
         ProductRecord product = productService.findById(id);
         return product;
     }
 
 //    @GetMapping("product2-update")
-    @PutMapping("/product2-update")
+    @PutMapping("/api/product/{id}")
     public void update2(@RequestParam(name = "id")Integer id,
                         @RequestParam(name = "name")String name,
                         @RequestParam(name = "price")Integer price) {

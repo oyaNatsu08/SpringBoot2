@@ -20,6 +20,7 @@
       <thead>
         <tr>
           <th>選択</th>
+          <th>商品ID</th>
           <th>商品名</th>
           <th>値段</th>
         </tr>
@@ -36,7 +37,7 @@
     <h1>商品詳細</h1>
     <p>
       商品ID：
-      <span id="product-id"></span>
+      <input id="product-id" disabled></input>
     </p>
     <p>
       商品名：
@@ -82,7 +83,7 @@
       document.getElementById('detail-view').style.display = 'none';
       document.getElementById('list-view').style.display = 'block';
 
-      fetch('/product2-list')
+      fetch('/api/products')
         .then(res => {
           res.json()
             .then(data => {
@@ -92,7 +93,8 @@
               data.forEach(product => {
                 const row = document.createElement('tr');
                 //row.innerHTML = `<td><a href="#"><span class="detail">${product.id}</span></a></td><td>${product.name}</td><td>${product.price}</td>`;
-                row.innerHTML = `<td><input type="radio" name="select" class="radio"><input type="hidden" id="id" value="${product.id}"></td><td>${product.name}</td><td>${product.price}</td>`;
+                row.innerHTML = `<td><input type="radio" name="select" class="radio"><input type="hidden" id="id" value="${product.id}"></td>
+                                 <td>${product.id}</td><td>${product.name}</td><td>${product.price}</td>`;
                 table.appendChild(row);
                 // document.getElementById('id').textContent = product.id;
                 // document.getElementById('name').textContent = product.name;
@@ -105,7 +107,7 @@
               details.forEach(detail => {
 
                 detail.addEventListener('click', () => {
-                  document.getElementById('list-view').style.display = 'none';
+                  //document.getElementById('list-view').style.display = 'none';
                   document.getElementById('add-view').style.display = 'none';
                   document.getElementById('detail-view').style.display = 'block';
                   document.getElementById('success2').textContent = '';
@@ -114,12 +116,12 @@
                   const id = detail.parentNode.querySelector('#id').value;
                   console.log(id);
 
-                  fetch(`/product2-detail-view?id=${id}`)
+                  fetch(`/product/detail?id=${id}`)
                     .then(res => {
                       res.json()
                         .then(data => {
                           // JSONにアクセスして、データを直接取得してくる
-                          document.getElementById('product-id').textContent = data.id;
+                          document.getElementById('product-id').value = data.id;
                           document.getElementById('product-name').value = data.name;
                           document.getElementById('product-price').value = data.price;
                         });
@@ -140,7 +142,7 @@
     //追加画面切り替え
     document.getElementById('add-view-button').addEventListener('click', () => {
 
-      document.getElementById('list-view').style.display = 'none';
+      //document.getElementById('list-view').style.display = 'none';
       document.getElementById('detail-view').style.display = 'none';
       document.getElementById('add-view').style.display = 'block';
       document.getElementById('success').textContent = '';
@@ -155,20 +157,30 @@
       const name = document.getElementById('name').value;
       const price = document.getElementById('price').value;
 
+      const formData = new URLSearchParams();
+      formData.append('name', name);
+      formData.append('price', price);
+
       console.log(name);
       console.log(price);
 
-      fetch(`product2-add?name=${name}&price=${price}`)
+      fetch('/api/product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData // リクエストボディのデータを設定
+      })
         .then((response) => {
           document.getElementById('success').textContent = '商品を追加しました';
         });
 
-    });
+      });
 
     //更新ボタンクリック
     document.getElementById('update').addEventListener('click', () => {
 
-      const id = document.getElementById('product-id').textContent;
+      const id = document.getElementById('product-id').value;
       const name = document.getElementById('product-name').value;
       const price = document.getElementById('product-price').value;
 
@@ -179,7 +191,7 @@
       formData.append('name', name);
       formData.append('price', price);
 
-      fetch('product2-update', {
+      fetch(`/api/product/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
